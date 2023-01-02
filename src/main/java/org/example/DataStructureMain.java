@@ -15,6 +15,7 @@ public class DataStructureMain {
     public static final int ORDERED_LIST = 2;
     public static final int BALANCED_PARENTHESIS = 3;
     public static final int BANKING_CASH_COUNTER = 4;
+    public static final int PALINDROME_CHECKER = 5;
     public static final int EXIT = 0;
     public static final int DEPOSIT = 1;
     public static final int WITHDRAW = 2;
@@ -29,6 +30,7 @@ public class DataStructureMain {
                     "\n2 : Ordered list operations" +
                     "\n3 : Balanced parenthesis" +
                     "\n4 : Simulate bank cash counter" +
+                    "\n5 : Palindrome checker" +
                     "\n0 : Exit");
             int choice = sc.nextInt();
             switch (choice) {
@@ -44,13 +46,32 @@ public class DataStructureMain {
                 case BANKING_CASH_COUNTER:
                     dataStructureMain.simulateCashCounter();
                     break;
+                case PALINDROME_CHECKER:
+                    dataStructureMain.palindromeChecker();
+                    break;
                 case EXIT:
                     return;
                 default:
                     System.out.println("Invalid input");
-
             }
         }
+    }
+
+    private void palindromeChecker() {
+        MyDeque<Character> myDeque = new MyDeque<>();
+        System.out.println("Enter a string");
+        Scanner sc = new Scanner(System.in);
+        char[] inputStringChars = sc.next().toCharArray();
+        for (int i = 0; i < inputStringChars.length; i++) {
+            myDeque.addRear(new MyNode<>(inputStringChars[i]));
+        }
+        while (myDeque.size() > 1) {
+            if (myDeque.removeFront() != myDeque.removeRear()) {
+                System.out.println("Strings are not palindrome");
+                return;
+            }
+        }
+        System.out.println("String are palindrome");
     }
 
     private void simulateCashCounter() {
