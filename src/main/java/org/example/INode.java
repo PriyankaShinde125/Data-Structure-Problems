@@ -1,4 +1,4 @@
-package org.example.linkedlist;
+package org.example;
 
 public interface INode<T> extends Comparable<INode<T>>{
     T getKey();

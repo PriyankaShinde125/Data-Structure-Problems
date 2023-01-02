@@ -1,4 +1,4 @@
-package org.example.linkedlist;
+package org.example;
 
 public class MyNode<T extends Comparable> implements INode<T> {
     T key;

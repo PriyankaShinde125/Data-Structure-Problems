@@ -1,4 +1,4 @@
-package org.example.linkedlist;
+package org.example;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -14,7 +14,11 @@ public class DataStructureMain {
     public static final int UNORDERED_LIST = 1;
     public static final int ORDERED_LIST = 2;
     public static final int BALANCED_PARENTHESIS = 3;
+    public static final int BANKING_CASH_COUNTER = 4;
     public static final int EXIT = 0;
+    public static final int DEPOSIT = 1;
+    public static final int WITHDRAW = 2;
+    public static final int ENQUEUE_PEOPLE = 3;
 
     public static void main(String[] args) throws CustomException {
         DataStructureMain dataStructureMain = new DataStructureMain();
@@ -24,6 +28,7 @@ public class DataStructureMain {
                     "\n1 : unordered list operation" +
                     "\n2 : Ordered list operations" +
                     "\n3 : Balanced parenthesis" +
+                    "\n4 : Simulate bank cash counter" +
                     "\n0 : Exit");
             int choice = sc.nextInt();
             switch (choice) {
@@ -36,6 +41,9 @@ public class DataStructureMain {
                 case BALANCED_PARENTHESIS:
                     dataStructureMain.ensureBalancedParenthesis();
                     break;
+                case BANKING_CASH_COUNTER:
+                    dataStructureMain.simulateCashCounter();
+                    break;
                 case EXIT:
                     return;
                 default:
@@ -43,6 +51,66 @@ public class DataStructureMain {
 
             }
         }
+    }
+
+    private void simulateCashCounter() {
+        MyQueue<String> queue = new MyQueue<>();
+        Scanner sc = new Scanner(System.in);
+        int amount;
+        boolean flag = false;
+
+        while (!flag) {
+            System.out.println("Select operation type : \n1 : Deposite \n2 : Withraw \n3 : Enqueue people \n0 : Close counter");
+            int input = sc.nextInt();
+            switch (input) {
+                case DEPOSIT:
+                    if (queue.isEmpty()) {
+                        System.out.println("Queue is empty");
+                        continue;
+                    }
+                    amount = getAmount();
+                    queue.balance += amount;
+                    System.out.println(queue.dequeue() + " has made deposit of Rs " + amount);
+                    break;
+
+                case WITHDRAW:
+                    if (queue.isEmpty()) {
+                        System.out.println("Queue is empty");
+                        continue;
+                    }
+                    amount = getAmount();
+                    queue.balance -= amount;
+                    System.out.println(queue.dequeue() + " has made withdrawal of Rs " + amount);
+                    break;
+
+                case ENQUEUE_PEOPLE:
+                    System.out.println("how many people do you want to enqueue :");
+                    int numberOfPeople = sc.nextInt();
+                    for (int i = 1; i <= numberOfPeople; i++) {
+                        System.out.println("Enter person name :");
+                        queue.enqueue(new MyNode<>(sc.next()));
+                    }
+                    System.out.println(queue);
+                    break;
+
+                case EXIT:
+                    return;
+
+                default:
+                    System.out.println("Enter valid input");
+                    continue;
+            }
+
+            System.out.println("Cash balance = " + queue.balance);
+            flag = queue.isEmpty();
+        }
+    }
+
+    private int getAmount() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter amount");
+        int amount = sc.nextInt();
+        return amount;
     }
 
     private void ensureBalancedParenthesis() {
@@ -54,15 +122,15 @@ public class DataStructureMain {
         for (int i = 0; i < expressionChars.length; i++) {
             if (expressionChars[i] == '(')
                 myStack.push(new MyNode(expressionChars[0]));
-            if (expressionChars[i] == ')'){
-                if(myStack.isEmpty()){
+            if (expressionChars[i] == ')') {
+                if (myStack.isEmpty()) {
                     System.out.println("Expression is not balanced");
                     return;
                 }
                 myStack.pop();
             }
         }
-        if(myStack.isEmpty())
+        if (myStack.isEmpty())
             System.out.println("Expression is balanced");
         else
             System.out.println("Expression is not balanced");

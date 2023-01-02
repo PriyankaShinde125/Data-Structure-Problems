@@ -1,4 +1,4 @@
-package org.example.linkedlist;
+package org.example;
 
 public class MyStack<T> {
     MyLinkedList<T> myLinkedList;

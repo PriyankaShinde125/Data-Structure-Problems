@@ -1,4 +1,4 @@
-package org.example.linkedlist;
+package org.example;
 
 public class MyLinkedList<T> {
     INode<T> head;

@@ -1,4 +1,4 @@
-package org.example.linkedlist;
+package org.example;
 
 public enum ExceptionType {
     IO_EXCEPTION("Invalid file path");
