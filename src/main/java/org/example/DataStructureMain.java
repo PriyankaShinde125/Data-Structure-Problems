@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class DataStructureMain {
@@ -17,6 +18,7 @@ public class DataStructureMain {
     public static final int BANKING_CASH_COUNTER = 4;
     public static final int PALINDROME_CHECKER = 5;
     public static final int PRIME_IN_2D_ARRAY = 6;
+    public static final int PRIME_ANAGRAMS = 7;
     public static final int EXIT = 0;
     public static final int DEPOSIT = 1;
     public static final int WITHDRAW = 2;
@@ -33,6 +35,7 @@ public class DataStructureMain {
                     "\n4 : Simulate bank cash counter" +
                     "\n5 : Palindrome checker" +
                     "\n6 : Store all primes in 2D array" +
+                    "\n7 : Prime anagrams" +
                     "\n0 : Exit");
             int choice = sc.nextInt();
             switch (choice) {
@@ -53,7 +56,10 @@ public class DataStructureMain {
                     break;
                 case PRIME_IN_2D_ARRAY:
                     int[][] primeArray = dataStructureMain.getPrimeNumbers();
-                    dataStructureMain.printArray(primeArray);
+                    dataStructureMain.printArray(primeArray, 10, 100);
+                    break;
+                case PRIME_ANAGRAMS:
+                    dataStructureMain.printAllAnagramPrime();
                     break;
                 case EXIT:
                     return;
@@ -63,9 +69,57 @@ public class DataStructureMain {
         }
     }
 
-    private void printArray(int[][] primeArray) {
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 100; j++) {
+    private boolean isAnagram(String str1, String str2) {
+        if (str1.equalsIgnoreCase(str2))
+            return true;
+
+        if (str1.length() == 1 && str2.length() == 1 && !str1.equalsIgnoreCase(str2))
+            return false;
+        if (str1.length() != str2.length()) {
+            return false;
+        }
+        char[] str1CharArray = str1.toCharArray();
+        char[] str2CharArray = str2.toCharArray();
+        Arrays.sort(str1CharArray);
+        Arrays.sort(str2CharArray);
+        return Arrays.equals(str1CharArray, str2CharArray);
+    }
+
+    private void printAllAnagramPrime() {
+        int[] primes = Arrays.stream(getPrimeNumbers()).flatMapToInt(IntStream::of).filter(value -> value != 0).toArray();
+        int[] primeAnagramsArr = new int[1000];
+        int[][] primeAnagrams = new int[10][100];
+        int k = 0;
+        System.out.println("Anagram Primes");
+        for (int i = 0; i < primes.length; i++) {
+            for (int j = i + 1; j < primes.length; j++) {
+                if (isAnagram(String.valueOf(primes[i]), String.valueOf(primes[j]))) {
+                    primeAnagramsArr[k] = primes[i];
+                    k++;
+                    primeAnagramsArr[k] = primes[j];
+                    k++;
+                }
+           }
+        }
+        int[] tempArr = Arrays.stream(primeAnagramsArr).sorted().distinct().filter(value -> value != 0).toArray();
+        int temp = tempArr[0] / 100;
+        int j = 0;
+        int l = 0;
+        for (int value : tempArr) {
+            if (value / 100 > temp) {
+                j++;
+                l = 0;
+            }
+            primeAnagrams[j][l] = value;
+            l++;
+            temp = value / 100;
+        }
+        printArray(primeAnagrams, 10, 100);
+    }
+
+    private void printArray(int[][] primeArray, int row, int column) {
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
                 if (primeArray[i][j] == 0)
                     break;
                 System.out.print(primeArray[i][j] + " ");
@@ -83,7 +137,7 @@ public class DataStructureMain {
         int temp = number;
 
         while (number <= limit) {
-            if(number == 2){
+            if (number == 2) {
                 primeNumbers[i][j] = 2;
                 j++;
                 number++;
