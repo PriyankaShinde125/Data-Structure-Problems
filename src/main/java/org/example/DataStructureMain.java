@@ -16,6 +16,7 @@ public class DataStructureMain {
     public static final int BALANCED_PARENTHESIS = 3;
     public static final int BANKING_CASH_COUNTER = 4;
     public static final int PALINDROME_CHECKER = 5;
+    public static final int PRIME_IN_2D_ARRAY = 6;
     public static final int EXIT = 0;
     public static final int DEPOSIT = 1;
     public static final int WITHDRAW = 2;
@@ -31,6 +32,7 @@ public class DataStructureMain {
                     "\n3 : Balanced parenthesis" +
                     "\n4 : Simulate bank cash counter" +
                     "\n5 : Palindrome checker" +
+                    "\n6 : Store all primes in 2D array" +
                     "\n0 : Exit");
             int choice = sc.nextInt();
             switch (choice) {
@@ -49,12 +51,63 @@ public class DataStructureMain {
                 case PALINDROME_CHECKER:
                     dataStructureMain.palindromeChecker();
                     break;
+                case PRIME_IN_2D_ARRAY:
+                    int[][] primeArray = dataStructureMain.getPrimeNumbers();
+                    dataStructureMain.printArray(primeArray);
+                    break;
                 case EXIT:
                     return;
                 default:
                     System.out.println("Invalid input");
             }
         }
+    }
+
+    private void printArray(int[][] primeArray) {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 100; j++) {
+                if (primeArray[i][j] == 0)
+                    break;
+                System.out.print(primeArray[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    private int[][] getPrimeNumbers() {
+        int[][] primeNumbers = new int[10][100];
+        int limit = 1000;
+        int number = 2;
+        int i = 0;
+        int j = 0;
+        int temp = number;
+
+        while (number <= limit) {
+            if(number == 2){
+                primeNumbers[i][j] = 2;
+                j++;
+                number++;
+                continue;
+            }
+            if (temp > number % 100)
+                j = 0;
+            if (isPrime(number)) {
+                primeNumbers[i][j] = number;
+                j++;
+            }
+            i = number / 100;
+            temp = number % 100;
+            number++;
+        }
+        return primeNumbers;
+    }
+
+    private boolean isPrime(int number) {
+        for (int i = 2; i <= number / 2; i++) {
+            if (number % i == 0)
+                return false;
+        }
+        return true;
     }
 
     private void palindromeChecker() {
@@ -85,33 +138,15 @@ public class DataStructureMain {
             int input = sc.nextInt();
             switch (input) {
                 case DEPOSIT:
-                    if (queue.isEmpty()) {
-                        System.out.println("Queue is empty");
-                        continue;
-                    }
-                    amount = getAmount();
-                    queue.balance += amount;
-                    System.out.println(queue.dequeue() + " has made deposit of Rs " + amount);
+                    if (deposit(queue)) continue;
                     break;
 
                 case WITHDRAW:
-                    if (queue.isEmpty()) {
-                        System.out.println("Queue is empty");
-                        continue;
-                    }
-                    amount = getAmount();
-                    queue.balance -= amount;
-                    System.out.println(queue.dequeue() + " has made withdrawal of Rs " + amount);
+                    if (withdraw(queue)) continue;
                     break;
 
                 case ENQUEUE_PEOPLE:
-                    System.out.println("how many people do you want to enqueue :");
-                    int numberOfPeople = sc.nextInt();
-                    for (int i = 1; i <= numberOfPeople; i++) {
-                        System.out.println("Enter person name :");
-                        queue.enqueue(new MyNode<>(sc.next()));
-                    }
-                    System.out.println(queue);
+                    enqueuePeople(queue);
                     break;
 
                 case EXIT:
@@ -125,6 +160,41 @@ public class DataStructureMain {
             System.out.println("Cash balance = " + queue.balance);
             flag = queue.isEmpty();
         }
+    }
+
+    private static void enqueuePeople(MyQueue<String> queue) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("how many people do you want to enqueue :");
+        int numberOfPeople = sc.nextInt();
+        for (int i = 1; i <= numberOfPeople; i++) {
+            System.out.println("Enter person name :");
+            queue.enqueue(new MyNode<>(sc.next()));
+        }
+        System.out.println(queue);
+    }
+
+    private boolean withdraw(MyQueue<String> queue) {
+        int amount;
+        if (queue.isEmpty()) {
+            System.out.println("Queue is empty");
+            return true;
+        }
+        amount = getAmount();
+        queue.balance -= amount;
+        System.out.println(queue.dequeue() + " has made withdrawal of Rs " + amount);
+        return false;
+    }
+
+    private boolean deposit(MyQueue<String> queue) {
+        int amount;
+        if (queue.isEmpty()) {
+            System.out.println("Queue is empty");
+            return true;
+        }
+        amount = getAmount();
+        queue.balance += amount;
+        System.out.println(queue.dequeue() + " has made deposit of Rs " + amount);
+        return false;
     }
 
     private int getAmount() {
